@@ -1,0 +1,59 @@
+### ardupilot/Tools/autotest/default_params konumuna gidilerek "gazebo-iris.param" 3 kopyası oluşturulur
+###isimleri sırayla gazebo-drone1, gazebo-drone2, gazebo-drone3 yapılır
+###bunların içine en alt satıra sırayla SYSID_THISMAV 1, SYSID_THISMAV 2, SYSID_THISMAV 3 eklenir
+
+###aşağıdaki parametreler ardupilot/Tools/autotest/pysim klasörünün içindeki vehicleinfo.py içerisindeki #SIM satırının aldınaki gazebo-iris parametresinin altına yapıştırılmalı
+
+"gazebo-drone1": {
+    "waf_target": "bin/arducopter",
+    "default_params_filename": ["default_params/copter.parm",
+                                "default_params/gazebo-drone1.parm"],
+},
+"gazebo-drone2": {
+    "waf_target": "bin/arducopter",
+    "default_params_filename": ["default_params/copter.parm",
+                                "default_params/gazebo-drone2.parm"],
+},
+"gazebo-drone3": {
+    "waf_target": "bin/arducopter",
+    "default_params_filename": ["default_params/copter.parm",
+                                "default_params/gazebo-drone3.parm"],
+},
+
+
+-----------------------------------------------------------------------------------------------
+
+
+roslaunch iq_sim multi_drone.launch 
+
+cd ~/ardupilot/ArduCopter/ && sim_vehicle.py -v ArduCopter -f gazebo-drone1 --console -I0 --out=tcpin:0.0.0.0:8100
+cd ~/ardupilot/ArduCopter/ && sim_vehicle.py -v ArduCopter -f gazebo-drone2 --console -I1 --out=tcpin:0.0.0.0:8200
+cd ~/ardupilot/ArduCopter/ && sim_vehicle.py -v ArduCopter -f gazebo-drone3 --console -I2 --out=tcpin:0.0.0.0:8300
+
+
+
+
+##### Mission Planner
+sudo apt install mono-complete
+https://firmware.ardupilot.org/Tools/MissionPlanner/MissionPlanner-latest.zip ####copy_paste_link
+
+cd ./Downloads/MissionPlanner-latest/ && mono MissionPlanner.exe
+
+###missionplannerda üst panele sağ tıklayıp conntection options seçilmeli.
+###daha sonra sırayla udp seçeneği seçilip sırayla 14550, 14560, 14570.... gibi dronelar eklenmeli
+###"ctrl-f yaparak swarm seçilmeli ve bir drone lider seçilerek start basılmalı
+
+
+
+
+####### QGroundControl
+sudo usermod -a -G dialout $USER
+sudo apt-get remove modemmanager
+wget https://s3-us-west-2.amazonaws.com/qgroundcontrol/latest/QGroundControl.AppImage
+chmod +x ./QGroundControl.AppImage 
+
+./QGroundControl.AppImage  (or double click)
+
+
+#NOT: Qground üzerinden lider drone tcp portu ile (tcp 3 olan) bağlanırsa tek kumanda tüm dronelar yönetilebilir
+
